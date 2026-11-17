@@ -8,24 +8,14 @@ import {
   Plus,
   Terminal,
 } from 'lucide-react-native';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { formatDateKey, type Appointment } from '../lib/appointments';
 import { useAppointments } from '../providers/AppointmentsProvider';
+import { styles } from '../styles/calendar.styles';
+import { colors } from '../theme/colors';
 
 type CalendarMode = 'day' | 'week' | 'month';
-
-const colors = {
-  background: '#080D0A',
-  surface: '#101812',
-  surfaceRaised: '#142019',
-  border: '#24352A',
-  green: '#72F1A2',
-  greenMuted: '#9BB9A4',
-  text: '#F0F6F1',
-  textMuted: '#829187',
-  dimmed: '#4D5C51',
-};
 
 const modes: { id: CalendarMode; label: string }[] = [
   { id: 'day', label: 'Dia' },
@@ -303,27 +293,10 @@ function SelectedDayAgenda({
           <Text style={styles.sectionEyebrow}>COMPROMISSOS</Text>
           <Text style={styles.sectionTitle}>{capitalize(selectedDayLabel)}</Text>
         </View>
-        <View style={styles.agendaActions}>
-          <View style={styles.countBadge}>
-            <Text style={styles.countText}>
-              {String(dayAppointments.length).padStart(2, '0')}
-            </Text>
-          </View>
-          <Link
-            href={{
-              pathname: '/new-appointment',
-              params: { date: formatDateKey(date) },
-            }}
-            asChild
-          >
-            <Pressable
-              accessibilityRole="button"
-              style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}
-            >
-              <Plus color={colors.background} size={16} strokeWidth={2.5} />
-              <Text style={styles.addButtonText}>Novo</Text>
-            </Pressable>
-          </Link>
+        <View style={styles.countBadge}>
+          <Text style={styles.countText}>
+            {String(dayAppointments.length).padStart(2, '0')}
+          </Text>
         </View>
       </View>
 
@@ -437,6 +410,28 @@ export function CalendarScreen() {
           </Text>
         </View>
 
+        <Link
+          href={{
+            pathname: '/new-appointment',
+            params: { date: formatDateKey(selectedDate) },
+          }}
+          asChild
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Agendar compromisso"
+            style={({ pressed }) => [
+              styles.createAppointmentButton,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Plus color={colors.background} size={17} strokeWidth={2.5} />
+            <Text style={styles.createAppointmentButtonText}>
+              Agendar compromisso
+            </Text>
+          </Pressable>
+        </Link>
+
         <View style={styles.modeSelector}>
           {modes.map((item) => {
             const isSelected = mode === item.id;
@@ -518,6 +513,12 @@ export function CalendarScreen() {
             onSelectDate={setSelectedDate}
           />
         ) : null}
+        {mode !== 'day' ? (
+          <View style={styles.calendarLegend}>
+            <View style={styles.calendarLegendDot} />
+            <Text style={styles.calendarLegendText}>Dia com compromisso</Text>
+          </View>
+        ) : null}
         {mode === 'day' ? (
           <View style={styles.dayFocusCard}>
             <View style={styles.dayNumberCard}>
@@ -562,521 +563,3 @@ export function CalendarScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 32,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brand: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  brandIcon: {
-    width: 38,
-    height: 38,
-    marginRight: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  brandName: {
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: '800',
-    letterSpacing: 2,
-  },
-  brandCaption: {
-    marginTop: 3,
-    color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: '600',
-    letterSpacing: 1.4,
-  },
-  status: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-  },
-  statusDot: {
-    width: 6,
-    height: 6,
-    marginRight: 7,
-    borderRadius: 3,
-    backgroundColor: colors.green,
-  },
-  statusText: {
-    color: colors.greenMuted,
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 1.2,
-  },
-  intro: {
-    marginTop: 34,
-    marginBottom: 22,
-  },
-  introEyebrow: {
-    marginBottom: 8,
-    color: colors.green,
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 1.5,
-  },
-  title: {
-    color: colors.text,
-    fontSize: 29,
-    fontWeight: '700',
-    letterSpacing: -0.8,
-  },
-  subtitle: {
-    marginTop: 7,
-    color: colors.textMuted,
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  modeSelector: {
-    flexDirection: 'row',
-    padding: 4,
-    borderRadius: 13,
-    backgroundColor: colors.surface,
-  },
-  modeButton: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
-  selectedModeButton: {
-    backgroundColor: colors.surfaceRaised,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  modeButtonText: {
-    color: colors.textMuted,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  selectedModeButtonText: {
-    color: colors.green,
-  },
-  periodToolbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 24,
-    marginBottom: 14,
-  },
-  periodTitleContainer: {
-    flex: 1,
-    minWidth: 0,
-    marginRight: 8,
-  },
-  periodEyebrow: {
-    marginBottom: 5,
-    color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 1.2,
-  },
-  periodTitle: {
-    color: colors.text,
-    fontSize: 16,
-    fontWeight: '700',
-    letterSpacing: -0.2,
-  },
-  periodActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  arrowButton: {
-    width: 34,
-    height: 34,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 4,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  todayButton: {
-    marginLeft: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 9,
-    borderRadius: 9,
-    backgroundColor: '#1C3324',
-  },
-  todayButtonText: {
-    color: colors.green,
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  calendarCard: {
-    paddingHorizontal: 10,
-    paddingTop: 14,
-    paddingBottom: 10,
-    borderRadius: 17,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  weekdayRow: {
-    flexDirection: 'row',
-    marginBottom: 6,
-  },
-  weekdayCell: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 27,
-  },
-  weekdayText: {
-    color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 0.6,
-  },
-  dateRow: {
-    flexDirection: 'row',
-    marginBottom: 3,
-  },
-  monthDateCell: {
-    flex: 1,
-    height: 42,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 1,
-    borderRadius: 12,
-  },
-  selectedDateCell: {
-    backgroundColor: colors.green,
-  },
-  todayDateCell: {
-    borderWidth: 1,
-    borderColor: '#35523E',
-  },
-  monthDateText: {
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  outsideMonthText: {
-    color: colors.dimmed,
-  },
-  todayDateText: {
-    color: colors.green,
-    fontWeight: '700',
-  },
-  selectedDateText: {
-    color: colors.background,
-    fontWeight: '800',
-  },
-  dateIndicator: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: 'transparent',
-  },
-  indicatorRow: {
-    height: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 2,
-  },
-  appointmentIndicator: {
-    backgroundColor: colors.green,
-  },
-  todayIndicator: {
-    backgroundColor: colors.green,
-  },
-  selectedIndicator: {
-    backgroundColor: colors.background,
-  },
-  weekCard: {
-    flexDirection: 'row',
-    padding: 8,
-    borderRadius: 17,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  weekDateCell: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  selectedWeekDateCell: {
-    backgroundColor: colors.green,
-  },
-  weekDateLabel: {
-    fontSize: 8,
-    letterSpacing: 0.2,
-  },
-  selectedWeekDateLabel: {
-    color: '#31563B',
-  },
-  weekDateNumber: {
-    marginTop: 8,
-    color: colors.text,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  weekIndicator: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: 'transparent',
-  },
-  weekIndicatorRow: {
-    height: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 6,
-  },
-  dayFocusCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  dayNumberCard: {
-    width: 54,
-    height: 58,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 13,
-    backgroundColor: colors.surfaceRaised,
-  },
-  dayNumber: {
-    color: colors.green,
-    fontSize: 23,
-    fontWeight: '700',
-  },
-  dayFocusText: {
-    flex: 1,
-    marginLeft: 14,
-  },
-  dayWeekday: {
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 0.7,
-  },
-  dayMonth: {
-    marginTop: 5,
-    color: colors.textMuted,
-    fontSize: 12,
-  },
-  todayTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 7,
-    backgroundColor: '#1C3324',
-  },
-  todayTagText: {
-    color: colors.green,
-    fontSize: 8,
-    fontWeight: '800',
-    letterSpacing: 0.8,
-  },
-  agendaHeading: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    marginTop: 27,
-    marginBottom: 13,
-  },
-  agendaActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  agendaHeadingText: {
-    flex: 1,
-    marginRight: 10,
-  },
-  sectionEyebrow: {
-    color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 1.4,
-  },
-  sectionTitle: {
-    marginTop: 5,
-    color: colors.text,
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: -0.3,
-  },
-  countBadge: {
-    minWidth: 34,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    backgroundColor: colors.surfaceRaised,
-  },
-  countText: {
-    color: colors.greenMuted,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-  },
-  addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 8,
-    paddingHorizontal: 11,
-    paddingVertical: 8,
-    borderRadius: 9,
-    backgroundColor: colors.green,
-  },
-  addButtonText: {
-    marginLeft: 5,
-    color: colors.background,
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  messageCard: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  errorText: {
-    color: '#FF9B9B',
-    fontSize: 13,
-    textAlign: 'center',
-  },
-  retryButton: {
-    marginTop: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 9,
-    backgroundColor: colors.surfaceRaised,
-  },
-  retryButtonText: {
-    color: colors.green,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  emptyCard: {
-    minHeight: 142,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  emptyIcon: {
-    width: 42,
-    height: 42,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 13,
-    backgroundColor: colors.surfaceRaised,
-  },
-  emptyTitle: {
-    marginTop: 12,
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  emptyDescription: {
-    marginTop: 5,
-    color: colors.textMuted,
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  appointmentList: {
-    gap: 9,
-  },
-  appointmentCard: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    padding: 15,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  appointmentTime: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minWidth: 72,
-    paddingTop: 1,
-  },
-  appointmentTimeText: {
-    marginLeft: 6,
-    color: colors.green,
-    fontSize: 12,
-    fontWeight: '700',
-    fontVariant: ['tabular-nums'],
-  },
-  appointmentDetails: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  appointmentTitle: {
-    color: colors.text,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  appointmentNotes: {
-    marginTop: 5,
-    color: colors.textMuted,
-    fontSize: 12,
-    lineHeight: 17,
-  },
-  pressed: {
-    opacity: 0.76,
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 25,
-  },
-  footerText: {
-    marginLeft: 7,
-    color: colors.textMuted,
-    fontSize: 9,
-    fontWeight: '600',
-    letterSpacing: 0.9,
-  },
-  footerLine: {
-    flex: 1,
-    height: 1,
-    marginHorizontal: 10,
-    backgroundColor: colors.border,
-  },
-  footerVersion: {
-    color: colors.textMuted,
-    fontSize: 9,
-  },
-});

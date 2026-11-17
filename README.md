@@ -10,6 +10,14 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - Cadastre compromissos com título, data, horário e observações opcionais.
 - Os compromissos ficam salvos localmente em SQLite e são indicados por pontos no calendário.
 
+## Estrutura
+
+- `src/app/` — rotas e telas.
+- `src/components/` — componentes de interface.
+- `src/styles/` — estilos isolados por tela.
+- `src/theme/` — tokens visuais compartilhados.
+- `src/providers/` e `src/lib/` — estado e acesso aos dados.
+
 ## Requisitos
 
 - Node.js LTS
