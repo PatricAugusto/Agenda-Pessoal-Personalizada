@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Link } from 'expo-router';
 import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
   Clock3,
+  Plus,
   Terminal,
 } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { formatDateKey, type Appointment } from '../lib/appointments';
+import { useAppointments } from '../providers/AppointmentsProvider';
 
 type CalendarMode = 'day' | 'week' | 'month';
 
@@ -33,10 +37,6 @@ const weekdayLabels = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
 
 function atMidnight(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
-
-function dateKey(date: Date) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
 
 function addDays(date: Date, amount: number) {
@@ -97,10 +97,12 @@ function weekdayLabel(date: Date) {
 function MonthCalendar({
   selectedDate,
   todayKey,
+  appointmentsByDate,
   onSelectDate,
 }: {
   selectedDate: Date;
   todayKey: string;
+  appointmentsByDate: ReadonlyMap<string, number>;
   onSelectDate: (date: Date) => void;
 }) {
   const dates = monthDates(selectedDate);
@@ -120,13 +122,15 @@ function MonthCalendar({
       {weeks.map((week, weekIndex) => (
         <View key={weekIndex} style={styles.dateRow}>
           {week.map((date) => {
-            const isSelected = dateKey(date) === dateKey(selectedDate);
-            const isToday = dateKey(date) === todayKey;
+            const dateKey = formatDateKey(date);
+            const isSelected = dateKey === formatDateKey(selectedDate);
+            const isToday = dateKey === todayKey;
+            const appointmentCount = appointmentsByDate.get(dateKey) ?? 0;
             const isCurrentMonth = date.getMonth() === selectedDate.getMonth();
 
             return (
               <Pressable
-                key={dateKey(date)}
+                key={dateKey}
                 accessibilityRole="button"
                 accessibilityLabel={new Intl.DateTimeFormat('pt-BR', {
                   weekday: 'long',
@@ -152,13 +156,28 @@ function MonthCalendar({
                 >
                   {date.getDate()}
                 </Text>
-                <View
-                  style={[
-                    styles.dateIndicator,
-                    isToday && !isSelected && styles.todayIndicator,
-                    isSelected && styles.selectedIndicator,
-                  ]}
-                />
+                <View style={styles.indicatorRow}>
+                  {appointmentCount > 0
+                    ? Array.from({ length: Math.min(appointmentCount, 3) }, (_, index) => (
+                        <View
+                          key={index}
+                          style={[
+                            styles.dateIndicator,
+                            styles.appointmentIndicator,
+                            isSelected && styles.selectedIndicator,
+                          ]}
+                        />
+                      ))
+                    : (
+                        <View
+                          style={[
+                            styles.dateIndicator,
+                            isToday && !isSelected && styles.todayIndicator,
+                            isSelected && styles.selectedIndicator,
+                          ]}
+                        />
+                      )}
+                </View>
               </Pressable>
             );
           })}
@@ -171,10 +190,12 @@ function MonthCalendar({
 function WeekCalendar({
   selectedDate,
   todayKey,
+  appointmentsByDate,
   onSelectDate,
 }: {
   selectedDate: Date;
   todayKey: string;
+  appointmentsByDate: ReadonlyMap<string, number>;
   onSelectDate: (date: Date) => void;
 }) {
   const firstDay = startOfWeek(selectedDate);
@@ -183,12 +204,14 @@ function WeekCalendar({
   return (
     <View style={styles.weekCard}>
       {dates.map((date) => {
-        const isSelected = dateKey(date) === dateKey(selectedDate);
-        const isToday = dateKey(date) === todayKey;
+        const dateKey = formatDateKey(date);
+        const isSelected = dateKey === formatDateKey(selectedDate);
+        const isToday = dateKey === todayKey;
+        const appointmentCount = appointmentsByDate.get(dateKey) ?? 0;
 
         return (
           <Pressable
-            key={dateKey(date)}
+            key={dateKey}
             accessibilityRole="button"
             accessibilityLabel={new Intl.DateTimeFormat('pt-BR', {
               weekday: 'long',
@@ -221,13 +244,28 @@ function WeekCalendar({
             >
               {date.getDate()}
             </Text>
-            <View
-              style={[
-                styles.weekIndicator,
-                isToday && !isSelected && styles.todayIndicator,
-                isSelected && styles.selectedIndicator,
-              ]}
-            />
+            <View style={styles.weekIndicatorRow}>
+              {appointmentCount > 0
+                ? Array.from({ length: Math.min(appointmentCount, 3) }, (_, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.weekIndicator,
+                        styles.appointmentIndicator,
+                        isSelected && styles.selectedIndicator,
+                      ]}
+                    />
+                  ))
+                : (
+                    <View
+                      style={[
+                        styles.weekIndicator,
+                        isToday && !isSelected && styles.todayIndicator,
+                        isSelected && styles.selectedIndicator,
+                      ]}
+                    />
+                  )}
+            </View>
           </Pressable>
         );
       })}
@@ -235,13 +273,28 @@ function WeekCalendar({
   );
 }
 
-function SelectedDayAgenda({ date }: { date: Date }) {
-  const isToday = dateKey(date) === dateKey(atMidnight(new Date()));
+function SelectedDayAgenda({
+  date,
+  appointments,
+  isLoading,
+  loadError,
+  onRetry,
+}: {
+  date: Date;
+  appointments: Appointment[];
+  isLoading: boolean;
+  loadError: string | null;
+  onRetry: () => void;
+}) {
+  const isToday = formatDateKey(date) === formatDateKey(atMidnight(new Date()));
   const selectedDayLabel = new Intl.DateTimeFormat('pt-BR', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
   }).format(date);
+  const dayAppointments = appointments.filter(
+    (appointment) => appointment.date === formatDateKey(date),
+  );
 
   return (
     <>
@@ -250,22 +303,75 @@ function SelectedDayAgenda({ date }: { date: Date }) {
           <Text style={styles.sectionEyebrow}>COMPROMISSOS</Text>
           <Text style={styles.sectionTitle}>{capitalize(selectedDayLabel)}</Text>
         </View>
-        <View style={styles.countBadge}>
-          <Text style={styles.countText}>00</Text>
+        <View style={styles.agendaActions}>
+          <View style={styles.countBadge}>
+            <Text style={styles.countText}>
+              {String(dayAppointments.length).padStart(2, '0')}
+            </Text>
+          </View>
+          <Link
+            href={{
+              pathname: '/new-appointment',
+              params: { date: formatDateKey(date) },
+            }}
+            asChild
+          >
+            <Pressable
+              accessibilityRole="button"
+              style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}
+            >
+              <Plus color={colors.background} size={16} strokeWidth={2.5} />
+              <Text style={styles.addButtonText}>Novo</Text>
+            </Pressable>
+          </Link>
         </View>
       </View>
 
-      <View style={styles.emptyCard}>
-        <View style={styles.emptyIcon}>
-          <CalendarDays color={colors.greenMuted} size={21} strokeWidth={1.7} />
+      {loadError ? (
+        <View style={styles.messageCard}>
+          <Text style={styles.errorText}>{loadError}</Text>
+          <Pressable
+            accessibilityRole="button"
+            onPress={onRetry}
+            style={({ pressed }) => [styles.retryButton, pressed && styles.pressed]}
+          >
+            <Text style={styles.retryButtonText}>Tentar novamente</Text>
+          </Pressable>
         </View>
-        <Text style={styles.emptyTitle}>
-          {isToday ? 'Seu dia está livre' : 'Nenhum compromisso por aqui'}
-        </Text>
-        <Text style={styles.emptyDescription}>
-          Seus compromissos aparecerão aqui.
-        </Text>
-      </View>
+      ) : isLoading ? (
+        <View style={styles.messageCard}>
+          <Text style={styles.emptyDescription}>Carregando compromissos...</Text>
+        </View>
+      ) : dayAppointments.length > 0 ? (
+        <View style={styles.appointmentList}>
+          {dayAppointments.map((appointment) => (
+            <View key={appointment.id} style={styles.appointmentCard}>
+              <View style={styles.appointmentTime}>
+                <Clock3 color={colors.green} size={14} />
+                <Text style={styles.appointmentTimeText}>{appointment.time}</Text>
+              </View>
+              <View style={styles.appointmentDetails}>
+                <Text style={styles.appointmentTitle}>{appointment.title}</Text>
+                {appointment.notes ? (
+                  <Text style={styles.appointmentNotes}>{appointment.notes}</Text>
+                ) : null}
+              </View>
+            </View>
+          ))}
+        </View>
+      ) : (
+        <View style={styles.emptyCard}>
+          <View style={styles.emptyIcon}>
+            <CalendarDays color={colors.greenMuted} size={21} strokeWidth={1.7} />
+          </View>
+          <Text style={styles.emptyTitle}>
+            {isToday ? 'Seu dia está livre' : 'Nenhum compromisso por aqui'}
+          </Text>
+          <Text style={styles.emptyDescription}>
+            Seus compromissos aparecerão aqui.
+          </Text>
+        </View>
+      )}
     </>
   );
 }
@@ -273,7 +379,20 @@ function SelectedDayAgenda({ date }: { date: Date }) {
 export function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState(() => atMidnight(new Date()));
   const [mode, setMode] = useState<CalendarMode>('month');
-  const todayKey = dateKey(atMidnight(new Date()));
+  const {
+    appointments,
+    isLoading,
+    loadError,
+    reloadAppointments,
+  } = useAppointments();
+  const todayKey = formatDateKey(atMidnight(new Date()));
+  const appointmentsByDate = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const appointment of appointments) {
+      counts.set(appointment.date, (counts.get(appointment.date) ?? 0) + 1);
+    }
+    return counts;
+  }, [appointments]);
 
   function navigatePeriod(direction: -1 | 1) {
     if (mode === 'day') {
@@ -387,6 +506,7 @@ export function CalendarScreen() {
           <MonthCalendar
             selectedDate={selectedDate}
             todayKey={todayKey}
+            appointmentsByDate={appointmentsByDate}
             onSelectDate={setSelectedDate}
           />
         ) : null}
@@ -394,6 +514,7 @@ export function CalendarScreen() {
           <WeekCalendar
             selectedDate={selectedDate}
             todayKey={todayKey}
+            appointmentsByDate={appointmentsByDate}
             onSelectDate={setSelectedDate}
           />
         ) : null}
@@ -415,7 +536,7 @@ export function CalendarScreen() {
                 )}
               </Text>
             </View>
-            {dateKey(selectedDate) === todayKey ? (
+            {formatDateKey(selectedDate) === todayKey ? (
               <View style={styles.todayTag}>
                 <Text style={styles.todayTagText}>HOJE</Text>
               </View>
@@ -423,7 +544,13 @@ export function CalendarScreen() {
           </View>
         ) : null}
 
-        <SelectedDayAgenda date={selectedDate} />
+        <SelectedDayAgenda
+          date={selectedDate}
+          appointments={appointments}
+          isLoading={isLoading}
+          loadError={loadError}
+          onRetry={reloadAppointments}
+        />
 
         <View style={styles.footer}>
           <Clock3 color={colors.textMuted} size={14} />
@@ -663,9 +790,18 @@ const styles = StyleSheet.create({
   dateIndicator: {
     width: 4,
     height: 4,
-    marginTop: 2,
     borderRadius: 2,
     backgroundColor: 'transparent',
+  },
+  indicatorRow: {
+    height: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  appointmentIndicator: {
+    backgroundColor: colors.green,
   },
   todayIndicator: {
     backgroundColor: colors.green,
@@ -706,9 +842,15 @@ const styles = StyleSheet.create({
   weekIndicator: {
     width: 4,
     height: 4,
-    marginTop: 6,
     borderRadius: 2,
     backgroundColor: 'transparent',
+  },
+  weekIndicatorRow: {
+    height: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
   },
   dayFocusCard: {
     flexDirection: 'row',
@@ -766,6 +908,10 @@ const styles = StyleSheet.create({
     marginTop: 27,
     marginBottom: 13,
   },
+  agendaActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   agendaHeadingText: {
     flex: 1,
     marginRight: 10,
@@ -797,6 +943,47 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.8,
   },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 8,
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+    borderRadius: 9,
+    backgroundColor: colors.green,
+  },
+  addButtonText: {
+    marginLeft: 5,
+    color: colors.background,
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  messageCard: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  errorText: {
+    color: '#FF9B9B',
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 9,
+    backgroundColor: colors.surfaceRaised,
+  },
+  retryButtonText: {
+    color: colors.green,
+    fontSize: 12,
+    fontWeight: '700',
+  },
   emptyCard: {
     minHeight: 142,
     alignItems: 'center',
@@ -826,6 +1013,46 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: 12,
     textAlign: 'center',
+  },
+  appointmentList: {
+    gap: 9,
+  },
+  appointmentCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: 15,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  appointmentTime: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: 72,
+    paddingTop: 1,
+  },
+  appointmentTimeText: {
+    marginLeft: 6,
+    color: colors.green,
+    fontSize: 12,
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
+  },
+  appointmentDetails: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  appointmentTitle: {
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  appointmentNotes: {
+    marginTop: 5,
+    color: colors.textMuted,
+    fontSize: 12,
+    lineHeight: 17,
   },
   pressed: {
     opacity: 0.76,
