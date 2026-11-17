@@ -89,11 +89,11 @@ export const styles = StyleSheet.create({
     lineHeight: 19,
   },
   createAppointmentButton: {
-    minHeight: 46,
+    minHeight: 52,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginTop: 16,
     borderRadius: 12,
     backgroundColor: colors.green,
   },

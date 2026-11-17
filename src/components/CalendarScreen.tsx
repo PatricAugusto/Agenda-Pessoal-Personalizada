@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import {
   CalendarDays,
   ChevronLeft,
@@ -410,28 +410,6 @@ export function CalendarScreen() {
           </Text>
         </View>
 
-        <Link
-          href={{
-            pathname: '/new-appointment',
-            params: { date: formatDateKey(selectedDate) },
-          }}
-          asChild
-        >
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Agendar compromisso"
-            style={({ pressed }) => [
-              styles.createAppointmentButton,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Plus color={colors.background} size={17} strokeWidth={2.5} />
-            <Text style={styles.createAppointmentButtonText}>
-              Agendar compromisso
-            </Text>
-          </Pressable>
-        </Link>
-
         <View style={styles.modeSelector}>
           {modes.map((item) => {
             const isSelected = mode === item.id;
@@ -544,6 +522,26 @@ export function CalendarScreen() {
             ) : null}
           </View>
         ) : null}
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Agendar compromisso"
+          onPress={() =>
+            router.push({
+              pathname: '/new-appointment',
+              params: { date: formatDateKey(selectedDate) },
+            })
+          }
+          style={({ pressed }) => [
+            styles.createAppointmentButton,
+            pressed && styles.pressed,
+          ]}
+        >
+          <Plus color={colors.background} size={17} strokeWidth={2.5} />
+          <Text style={styles.createAppointmentButtonText}>
+            Agendar compromisso
+          </Text>
+        </Pressable>
 
         <SelectedDayAgenda
           date={selectedDate}
