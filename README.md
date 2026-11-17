@@ -1,6 +1,14 @@
 # Agenda Pessoal
 
-Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A interface inicial usa uma paleta escura com acentos verdes e ícones Lucide.
+Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A interface usa uma paleta escura com acentos verdes e ícones Lucide.
+
+## Calendário
+
+- Alterne entre as visualizações diária, semanal e mensal.
+- Navegue pelos períodos com as setas ou volte à data atual com **Hoje**.
+- Toque em um dia para selecioná-lo; a agenda abaixo acompanha a seleção.
+
+O calendário ainda não cadastra nem persiste compromissos.
 
 ## Requisitos
 
