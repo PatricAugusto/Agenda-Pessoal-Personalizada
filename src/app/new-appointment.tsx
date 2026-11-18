@@ -4,7 +4,7 @@ import {
   type DateTimePickerChangeEvent,
 } from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
-import { CalendarDays, ChevronLeft, ChevronRight, Clock3, Save } from 'lucide-react-native';
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, Save } from 'lucide-react-native';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -83,6 +83,7 @@ export default function NewAppointmentScreen() {
   );
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
+  const [isMeeting, setIsMeeting] = useState(false);
   const [pickerMode, setPickerMode] = useState<PickerMode | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -192,6 +193,7 @@ export default function NewAppointmentScreen() {
         time: appointmentTime,
         endTime: appointmentEndTime,
         notes: notes.trim() || null,
+        isMeeting,
       });
       router.back();
     } catch (error) {
@@ -362,6 +364,36 @@ export default function NewAppointmentScreen() {
                   </Pressable>
                 )}
               </View>
+            </View>
+
+            <View style={styles.fieldDivider} />
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>LIMITE DIÁRIO</Text>
+              <Pressable
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: isMeeting }}
+                onPress={() => setIsMeeting((current) => !current)}
+                style={({ pressed }) => [
+                  styles.meetingToggle,
+                  pressed && styles.pressed,
+                ]}
+              >
+                <View
+                  style={[
+                    styles.meetingCheckbox,
+                    isMeeting && styles.meetingCheckboxActive,
+                  ]}
+                >
+                  {isMeeting ? <Check color={colors.background} size={13} /> : null}
+                </View>
+                <View style={styles.meetingToggleCopy}>
+                  <Text style={styles.meetingToggleTitle}>Conta como reunião</Text>
+                  <Text style={styles.meetingToggleDescription}>
+                    Considera este compromisso no limite diário de reuniões.
+                  </Text>
+                </View>
+              </Pressable>
             </View>
 
             <View style={styles.fieldDivider} />

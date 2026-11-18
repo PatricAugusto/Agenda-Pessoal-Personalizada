@@ -87,6 +87,45 @@ export const styles = StyleSheet.create({
   fieldRow: {
     flexDirection: 'row',
   },
+  meetingToggle: {
+    minHeight: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(8, 13, 10, 0.58)',
+  },
+  meetingCheckbox: {
+    width: 21,
+    height: 21,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 11,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  meetingCheckboxActive: {
+    borderColor: colors.green,
+    backgroundColor: colors.green,
+  },
+  meetingToggleCopy: {
+    flex: 1,
+  },
+  meetingToggleTitle: {
+    color: colors.text,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  meetingToggleDescription: {
+    marginTop: 4,
+    color: colors.textMuted,
+    fontSize: 10,
+    lineHeight: 15,
+  },
   halfField: {
     flex: 1,
     minWidth: 0,

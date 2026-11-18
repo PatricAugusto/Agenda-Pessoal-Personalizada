@@ -12,4 +12,5 @@ export const colors = {
   textMuted: '#829187',
   dimmed: '#4D5C51',
   error: '#FF9B9B',
+  warning: '#F3CB80',
 };

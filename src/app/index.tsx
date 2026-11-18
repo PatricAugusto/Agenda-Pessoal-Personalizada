@@ -1,3 +1,3 @@
-import { CalendarScreen } from '../components/CalendarScreen';
+import { HomeScreen } from '../components/HomeScreen';
 
-export default CalendarScreen;
+export default HomeScreen;

@@ -10,9 +10,14 @@ import { useSQLiteContext } from 'expo-sqlite';
 import {
   deleteAppointment,
   getAppointments,
+  getProductivitySettings,
   insertAppointment,
+  saveProductivitySettings,
+  updateAppointmentOutcome as persistAppointmentOutcome,
   type Appointment,
+  type AppointmentOutcome,
   type NewAppointment,
+  type ProductivitySettings,
 } from '../lib/appointments';
 
 interface AppointmentsContextValue {
@@ -21,6 +26,13 @@ interface AppointmentsContextValue {
   loadError: string | null;
   addAppointment: (input: NewAppointment) => Promise<void>;
   deleteAppointment: (appointmentId: string) => Promise<void>;
+  updateAppointmentOutcome: (
+    appointmentId: string,
+    status: AppointmentOutcome,
+    executedMinutes: number,
+  ) => Promise<void>;
+  productivitySettings: ProductivitySettings | null;
+  updateProductivitySettings: (settings: ProductivitySettings) => Promise<void>;
   reloadAppointments: () => void;
 }
 
@@ -29,6 +41,8 @@ const AppointmentsContext = createContext<AppointmentsContextValue | null>(null)
 export function AppointmentsProvider({ children }: PropsWithChildren) {
   const db = useSQLiteContext();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [productivitySettings, setProductivitySettings] =
+    useState<ProductivitySettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
@@ -36,10 +50,11 @@ export function AppointmentsProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     let isActive = true;
 
-    getAppointments(db)
-      .then((items) => {
+    Promise.all([getAppointments(db), getProductivitySettings(db)])
+      .then(([items, settings]) => {
         if (isActive) {
           setAppointments(items);
+          setProductivitySettings(settings);
           setLoadError(null);
         }
       })
@@ -88,6 +103,32 @@ export function AppointmentsProvider({ children }: PropsWithChildren) {
     [db],
   );
 
+  const saveAppointmentOutcome = useCallback(
+    async (
+      appointmentId: string,
+      status: AppointmentOutcome,
+      executedMinutes: number,
+    ) => {
+      await persistAppointmentOutcome(db, appointmentId, status, executedMinutes);
+      setAppointments((current) =>
+        current.map((appointment) =>
+          appointment.id === appointmentId
+            ? { ...appointment, outcomeStatus: status, executedMinutes }
+            : appointment,
+        ),
+      );
+    },
+    [db],
+  );
+
+  const updateSettings = useCallback(
+    async (settings: ProductivitySettings) => {
+      await saveProductivitySettings(db, settings);
+      setProductivitySettings(settings);
+    },
+    [db],
+  );
+
   const reloadAppointments = useCallback(() => {
     setIsLoading(true);
     setLoadError(null);
@@ -102,6 +143,9 @@ export function AppointmentsProvider({ children }: PropsWithChildren) {
         loadError,
         addAppointment,
         deleteAppointment: removeAppointment,
+        updateAppointmentOutcome: saveAppointmentOutcome,
+        productivitySettings,
+        updateProductivitySettings: updateSettings,
         reloadAppointments,
       }}
     >

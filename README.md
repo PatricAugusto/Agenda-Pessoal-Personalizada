@@ -4,6 +4,14 @@ Visual: MIRAI / Personal Evolution, com logo Ensō verde sobre fundo escuro.
 
 Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A interface combina a paleta escura e os acentos verdes com superfícies translúcidas, desfoque e reflexos sutis no estilo liquid glass.
 
+## Início e capacidade
+
+- A tela inicial mostra a eficiência diária: minutos executados em relação ao tempo planejado, com o desvio e os compromissos que ainda aguardam fechamento.
+- Ao fechar um compromisso, registre se foi concluído, parcial (com os minutos executados) ou desfeito.
+- A média dos últimos dias considera apenas dias revisados; a tela também sinaliza quando a agenda passa de 90% da capacidade.
+- Defina limites de horas e reuniões por dia. Os compromissos marcados como reunião entram no limite, e excessos geram uma recomendação do que reduzir.
+- A capacidade acumulada da semana compara o tempo planejado com o limite diário configurado.
+
 ## Calendário
 
 - Alterne entre as visualizações diária, semanal e mensal.
@@ -12,6 +20,7 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - Cadastre compromissos com título, data, horário e observações opcionais.
 - Informe o horário inicial e final; o intervalo aparece junto ao compromisso na agenda.
 - Os compromissos ficam salvos localmente em SQLite e são indicados por pontos no calendário.
+- Marque um compromisso como reunião ao cadastrá-lo para incluí-lo no limite diário.
 - O Pomodoro oferece sessões de foco de 25 minutos e pausas de 5 minutos. Use o ícone de timer em um compromisso para iniciar o foco vinculado a ele.
 - O efeito de vidro usa `expo-blur` e mantém o fundo escuro com detalhes verdes em todas as telas principais.
 
