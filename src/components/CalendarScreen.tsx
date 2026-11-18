@@ -454,8 +454,8 @@ export function CalendarScreen() {
               <Terminal color={colors.green} size={19} strokeWidth={2} />
             </View>
             <View>
-              <Text style={styles.brandName}>NEXUS</Text>
-              <Text style={styles.brandCaption}>PERSONAL OS</Text>
+              <Text style={styles.brandName}>MIRAI</Text>
+              <Text style={styles.brandCaption}>PERSONAL EVOLUTION</Text>
             </View>
           </View>
           <View style={styles.status}>

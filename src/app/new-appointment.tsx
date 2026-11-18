@@ -243,45 +243,47 @@ export default function NewAppointmentScreen() {
 
             <View style={styles.fieldDivider} />
 
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>DATA</Text>
+              {Platform.OS === 'web' ? (
+                <TextInput
+                  accessibilityLabel="Data do compromisso"
+                  keyboardType="numbers-and-punctuation"
+                  maxLength={10}
+                  onChangeText={(value) => {
+                    setDateInput(value);
+                    const parsedDate = parseDateInput(value);
+                    if (parsedDate) {
+                      setSelectedDate(parsedDate);
+                    }
+                  }}
+                  placeholder="DD/MM/AAAA"
+                  placeholderTextColor={colors.textMuted}
+                  style={styles.textInput}
+                  value={dateInput}
+                />
+              ) : (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => openPicker('date')}
+                  style={({ pressed }) => [
+                    styles.pickerField,
+                    pressed && styles.pressed,
+                  ]}
+                >
+                  <CalendarDays color={colors.green} size={17} />
+                  <Text style={styles.pickerFieldText}>
+                    {new Intl.DateTimeFormat('pt-BR').format(selectedDate)}
+                  </Text>
+                  <ChevronRight color={colors.textMuted} size={16} />
+                </Pressable>
+              )}
+            </View>
+
+            <View style={styles.fieldDivider} />
+
             <View style={styles.fieldRow}>
               <View style={[styles.fieldGroup, styles.halfField]}>
-                <Text style={styles.fieldLabel}>DATA</Text>
-                {Platform.OS === 'web' ? (
-                  <TextInput
-                    accessibilityLabel="Data do compromisso"
-                    keyboardType="numbers-and-punctuation"
-                    maxLength={10}
-                    onChangeText={(value) => {
-                      setDateInput(value);
-                      const parsedDate = parseDateInput(value);
-                      if (parsedDate) {
-                        setSelectedDate(parsedDate);
-                      }
-                    }}
-                    placeholder="DD/MM/AAAA"
-                    placeholderTextColor={colors.textMuted}
-                    style={styles.textInput}
-                    value={dateInput}
-                  />
-                ) : (
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={() => openPicker('date')}
-                    style={({ pressed }) => [
-                      styles.pickerField,
-                      pressed && styles.pressed,
-                    ]}
-                  >
-                    <CalendarDays color={colors.green} size={17} />
-                    <Text style={styles.pickerFieldText}>
-                      {new Intl.DateTimeFormat('pt-BR').format(selectedDate)}
-                    </Text>
-                    <ChevronRight color={colors.textMuted} size={16} />
-                  </Pressable>
-                )}
-              </View>
-
-              <View style={[styles.fieldGroup, styles.halfField, styles.rightField]}>
                 <Text style={styles.fieldLabel}>HORÁRIO INICIAL</Text>
                 {Platform.OS === 'web' ? (
                   <TextInput
@@ -319,47 +321,45 @@ export default function NewAppointmentScreen() {
                   </Pressable>
                 )}
               </View>
-            </View>
 
-            <View style={styles.fieldDivider} />
-
-            <View style={styles.fieldGroup}>
-              <Text style={styles.fieldLabel}>HORÁRIO FINAL</Text>
-              {Platform.OS === 'web' ? (
-                <TextInput
-                  accessibilityLabel="Horário final do compromisso"
-                  keyboardType="numbers-and-punctuation"
-                  maxLength={5}
-                  onChangeText={(value) => {
-                    setEndTimeInput(value);
-                    if (parseTimeInput(value)) {
-                      const [hours, minutes] = value.split(':').map(Number);
-                      const nextTime = new Date(selectedEndTime);
-                      nextTime.setHours(hours, minutes, 0, 0);
-                      setSelectedEndTime(nextTime);
-                    }
-                  }}
-                  placeholder="HH:MM"
-                  placeholderTextColor={colors.textMuted}
-                  style={styles.textInput}
-                  value={endTimeInput}
-                />
-              ) : (
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => openPicker('endTime')}
-                  style={({ pressed }) => [
-                    styles.pickerField,
-                    pressed && styles.pressed,
-                  ]}
-                >
-                  <Clock3 color={colors.green} size={17} />
-                  <Text style={styles.pickerFieldText}>
-                    {timeInputValue(selectedEndTime)}
-                  </Text>
-                  <ChevronRight color={colors.textMuted} size={16} />
-                </Pressable>
-              )}
+              <View style={[styles.fieldGroup, styles.halfField, styles.rightField]}>
+                <Text style={styles.fieldLabel}>HORÁRIO FINAL</Text>
+                {Platform.OS === 'web' ? (
+                  <TextInput
+                    accessibilityLabel="Horário final do compromisso"
+                    keyboardType="numbers-and-punctuation"
+                    maxLength={5}
+                    onChangeText={(value) => {
+                      setEndTimeInput(value);
+                      if (parseTimeInput(value)) {
+                        const [hours, minutes] = value.split(':').map(Number);
+                        const nextTime = new Date(selectedEndTime);
+                        nextTime.setHours(hours, minutes, 0, 0);
+                        setSelectedEndTime(nextTime);
+                      }
+                    }}
+                    placeholder="HH:MM"
+                    placeholderTextColor={colors.textMuted}
+                    style={styles.textInput}
+                    value={endTimeInput}
+                  />
+                ) : (
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => openPicker('endTime')}
+                    style={({ pressed }) => [
+                      styles.pickerField,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Clock3 color={colors.green} size={17} />
+                    <Text style={styles.pickerFieldText}>
+                      {timeInputValue(selectedEndTime)}
+                    </Text>
+                    <ChevronRight color={colors.textMuted} size={16} />
+                  </Pressable>
+                )}
+              </View>
             </View>
 
             <View style={styles.fieldDivider} />
