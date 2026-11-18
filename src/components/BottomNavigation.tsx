@@ -12,24 +12,6 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
     <GlassSurface style={styles.container} intensity={55}>
       <Pressable
         accessibilityRole="button"
-        accessibilityState={{ selected: activeTab === 'home' }}
-        onPress={() => router.navigate('/')}
-        style={({ pressed }) => [
-          styles.tab,
-          activeTab === 'home' && styles.activeTab,
-          pressed && styles.pressed,
-        ]}
-      >
-        <House
-          color={activeTab === 'home' ? colors.green : colors.textMuted}
-          size={18}
-        />
-        <Text style={[styles.label, activeTab === 'home' && styles.activeLabel]}>
-          Início
-        </Text>
-      </Pressable>
-      <Pressable
-        accessibilityRole="button"
         accessibilityState={{ selected: activeTab === 'calendar' }}
         onPress={() => router.navigate('/calendar')}
         style={({ pressed }) => [
@@ -51,6 +33,7 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
           Calendário
         </Text>
       </Pressable>
+
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ selected: activeTab === 'pomodoro' }}
@@ -72,6 +55,28 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
           ]}
         >
           Pomodoro
+        </Text>
+      </Pressable>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ selected: activeTab === 'home' }}
+        onPress={() => router.navigate('/')}
+        style={({ pressed }) => [
+          styles.tab,
+          activeTab === 'home' && styles.activeTab,
+          pressed && styles.pressed,
+        ]}
+      >
+        <House
+          color={activeTab === 'home' ? colors.green : colors.textMuted}
+          size={18}
+        />
+        <Text
+          numberOfLines={1}
+          style={[styles.label, activeTab === 'home' && styles.activeLabel]}
+        >
+          Visão geral
         </Text>
       </Pressable>
     </GlassSurface>

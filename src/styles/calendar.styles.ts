@@ -501,18 +501,27 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   appointmentTime: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 92,
-    minHeight: 34,
+    minHeight: 46,
+  },
+  appointmentTimeRange: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
   },
   appointmentTimeText: {
-    marginLeft: 6,
     color: colors.green,
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '700',
     fontVariant: ['tabular-nums'],
+  },
+  appointmentTimeSeparator: {
+    marginHorizontal: 3,
+    color: colors.textMuted,
+    fontSize: 9,
   },
   appointmentDetails: {
     flex: 1,

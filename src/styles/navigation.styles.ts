@@ -24,9 +24,10 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(114, 241, 162, 0.1)',
   },
   label: {
-    marginLeft: 8,
+    flexShrink: 1,
+    marginLeft: 6,
     color: colors.textMuted,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
   },
   activeLabel: {
