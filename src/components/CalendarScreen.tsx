@@ -640,7 +640,7 @@ export function CalendarScreen() {
           <Clock3 color={colors.textMuted} size={14} />
           <Text style={styles.footerText}>UM DIA DE CADA VEZ</Text>
           <View style={styles.footerLine} />
-          <Text style={styles.footerVersion}>v0.2.0</Text>
+          <Text style={styles.footerVersion}>v1.1.0</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
