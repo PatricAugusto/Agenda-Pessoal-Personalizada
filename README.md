@@ -2,7 +2,7 @@
 
 Visual: MIRAI / Personal Evolution, com logo Ensō verde sobre fundo escuro.
 
-Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A interface usa uma paleta escura com acentos verdes e ícones Lucide.
+Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A interface combina a paleta escura e os acentos verdes com superfícies translúcidas, desfoque e reflexos sutis no estilo liquid glass.
 
 ## Calendário
 
@@ -13,6 +13,7 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - Informe o horário inicial e final; o intervalo aparece junto ao compromisso na agenda.
 - Os compromissos ficam salvos localmente em SQLite e são indicados por pontos no calendário.
 - O Pomodoro oferece sessões de foco de 25 minutos e pausas de 5 minutos. Use o ícone de timer em um compromisso para iniciar o foco vinculado a ele.
+- O efeito de vidro usa `expo-blur` e mantém o fundo escuro com detalhes verdes em todas as telas principais.
 
 ## Estrutura
 

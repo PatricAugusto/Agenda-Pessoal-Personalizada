@@ -4,7 +4,7 @@ import { colors } from '../theme/colors';
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   keyboardAvoiding: {
     flex: 1,
@@ -30,6 +30,10 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
+    shadowColor: colors.green,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
   },
   headerTitle: {
     flex: 1,
@@ -70,8 +74,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 11,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(8, 13, 10, 0.58)',
     color: colors.text,
     fontSize: 13,
   },
@@ -98,8 +102,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(8, 13, 10, 0.58)',
   },
   pickerFieldText: {
     flex: 1,
@@ -124,6 +128,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingVertical: 8,
     borderRadius: 9,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.surfaceRaised,
   },
   pickerDoneText: {
@@ -144,7 +150,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
     borderRadius: 12,
-    backgroundColor: colors.green,
+    borderWidth: 1,
+    borderColor: 'rgba(225, 255, 235, 0.5)',
+    backgroundColor: 'rgba(114, 241, 162, 0.88)',
+    shadowColor: colors.green,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+    elevation: 3,
   },
   disabledButton: {
     opacity: 0.55,

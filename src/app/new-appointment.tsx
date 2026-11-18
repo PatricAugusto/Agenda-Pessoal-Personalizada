@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { GlassCanvas, GlassSurface } from '../components/GlassSurface';
 import { formatDateKey, parseDateKey } from '../lib/appointments';
 import { useAppointments } from '../providers/AppointmentsProvider';
 import { styles } from '../styles/newAppointment.styles';
@@ -201,15 +202,16 @@ export default function NewAppointmentScreen() {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoiding}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
+    <GlassCanvas>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoiding}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
+          <ScrollView
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps="handled"
+          >
           <View style={styles.header}>
             <Pressable
               accessibilityRole="button"
@@ -225,7 +227,7 @@ export default function NewAppointmentScreen() {
             </View>
           </View>
 
-          <View style={styles.formCard}>
+          <GlassSurface style={styles.formCard}>
             <View style={styles.fieldGroup}>
               <Text style={styles.fieldLabel}>TÍTULO</Text>
               <TextInput
@@ -378,10 +380,10 @@ export default function NewAppointmentScreen() {
                 value={notes}
               />
             </View>
-          </View>
+          </GlassSurface>
 
           {Platform.OS === 'ios' && pickerMode ? (
-            <View style={styles.iosPickerCard}>
+            <GlassSurface style={styles.iosPickerCard}>
               <DateTimePicker
                 display="spinner"
                 is24Hour
@@ -402,7 +404,7 @@ export default function NewAppointmentScreen() {
               >
                 <Text style={styles.pickerDoneText}>Concluir</Text>
               </Pressable>
-            </View>
+            </GlassSurface>
           ) : null}
 
           {formError ? (
@@ -427,8 +429,9 @@ export default function NewAppointmentScreen() {
             </Text>
           </Pressable>
           <Text style={styles.localNote}>Salvo apenas neste aparelho.</Text>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </GlassCanvas>
   );
 }

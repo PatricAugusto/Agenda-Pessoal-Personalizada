@@ -1,6 +1,7 @@
 import { CalendarDays, Timer } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import { router } from 'expo-router';
+import { GlassSurface } from './GlassSurface';
 import { colors } from '../theme/colors';
 import { styles } from '../styles/navigation.styles';
 
@@ -8,7 +9,7 @@ export type AppTab = 'calendar' | 'pomodoro';
 
 export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
   return (
-    <View style={styles.container}>
+    <GlassSurface style={styles.container} intensity={55}>
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ selected: activeTab === 'calendar' }}
@@ -55,6 +56,6 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
           Pomodoro
         </Text>
       </Pressable>
-    </View>
+    </GlassSurface>
   );
 }

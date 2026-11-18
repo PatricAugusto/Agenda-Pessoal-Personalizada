@@ -4,7 +4,7 @@ import { colors } from '../theme/colors';
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   content: {
     paddingHorizontal: 24,
@@ -95,7 +95,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 16,
     borderRadius: 12,
-    backgroundColor: colors.green,
+    borderWidth: 1,
+    borderColor: 'rgba(225, 255, 235, 0.5)',
+    backgroundColor: 'rgba(114, 241, 162, 0.88)',
+    shadowColor: colors.green,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+    elevation: 3,
   },
   createAppointmentButtonText: {
     marginLeft: 8,
@@ -116,9 +123,9 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   selectedModeButton: {
-    backgroundColor: colors.surfaceRaised,
+    backgroundColor: 'rgba(114, 241, 162, 0.12)',
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
   },
   modeButtonText: {
     color: colors.textMuted,
@@ -166,14 +173,16 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(16, 24, 18, 0.64)',
   },
   todayButton: {
     marginLeft: 8,
     paddingHorizontal: 10,
     paddingVertical: 9,
     borderRadius: 9,
-    backgroundColor: '#1C3324',
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(114, 241, 162, 0.1)',
   },
   todayButtonText: {
     color: colors.green,
@@ -218,7 +227,9 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
   },
   selectedDateCell: {
-    backgroundColor: colors.green,
+    borderWidth: 1,
+    borderColor: 'rgba(232, 255, 238, 0.48)',
+    backgroundColor: 'rgba(114, 241, 162, 0.82)',
   },
   todayDateCell: {
     borderWidth: 1,
@@ -294,7 +305,9 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
   },
   selectedWeekDateCell: {
-    backgroundColor: colors.green,
+    borderWidth: 1,
+    borderColor: 'rgba(232, 255, 238, 0.45)',
+    backgroundColor: 'rgba(114, 241, 162, 0.78)',
   },
   weekDateLabel: {
     fontSize: 8,
@@ -337,7 +350,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 13,
-    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(25, 39, 29, 0.62)',
   },
   dayNumber: {
     color: colors.green,
@@ -363,7 +378,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 5,
     borderRadius: 7,
-    backgroundColor: '#1C3324',
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(114, 241, 162, 0.12)',
   },
   todayTagText: {
     color: colors.green,
@@ -401,6 +418,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.surfaceRaised,
   },
   countText: {
@@ -428,6 +447,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 9,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.surfaceRaised,
   },
   retryButtonText: {
@@ -451,6 +472,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 13,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.surfaceRaised,
   },
   emptyTitle: {

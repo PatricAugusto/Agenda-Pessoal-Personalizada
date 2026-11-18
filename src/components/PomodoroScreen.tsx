@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomNavigation } from './BottomNavigation';
+import { GlassCanvas, GlassSurface } from './GlassSurface';
 import { usePomodoro, breakDurationSeconds, focusDurationSeconds } from '../providers/PomodoroProvider';
 import { colors } from '../theme/colors';
 import { styles } from '../styles/pomodoro.styles';
@@ -56,8 +57,9 @@ export function PomodoroScreen() {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
+    <GlassCanvas>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.heading}>
           <Text style={styles.eyebrow}>MIRAI · PERSONAL EVOLUTION</Text>
           <Text style={styles.title}>Pomodoro</Text>
@@ -66,7 +68,7 @@ export function PomodoroScreen() {
           </Text>
         </View>
 
-        <View style={styles.timerCard}>
+        <GlassSurface style={styles.timerCard} intensity={48}>
           <Text style={styles.phaseLabel}>
             {isFocus ? 'INTERVALO DE FOCO' : 'PAUSA'}
           </Text>
@@ -142,9 +144,9 @@ export function PomodoroScreen() {
               <RotateCcw color={colors.textMuted} size={18} />
             </Pressable>
           </View>
-        </View>
+        </GlassSurface>
 
-        <View style={styles.cycleCard}>
+        <GlassSurface style={styles.cycleCard}>
           <Text style={styles.cycleEyebrow}>CICLO DE FOCO · 25 MIN</Text>
           <View style={styles.cycleDots}>
             {Array.from({ length: 4 }, (_, index) => (
@@ -160,13 +162,14 @@ export function PomodoroScreen() {
               {cycleProgress}/4 SESSÕES
             </Text>
           </View>
-        </View>
+        </GlassSurface>
         <Text style={styles.tip}>
           Dica: toque no ícone de foco de um compromisso para iniciar uma sessão
           vinculada a ele.
         </Text>
-      </ScrollView>
-      <BottomNavigation activeTab="pomodoro" />
-    </SafeAreaView>
+        </ScrollView>
+        <BottomNavigation activeTab="pomodoro" />
+      </SafeAreaView>
+    </GlassCanvas>
   );
 }

@@ -7,9 +7,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 6,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.background,
+    marginHorizontal: 14,
+    marginBottom: 3,
   },
   tab: {
     flex: 1,
@@ -20,7 +19,9 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
   },
   activeTab: {
-    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+    backgroundColor: 'rgba(114, 241, 162, 0.1)',
   },
   label: {
     marginLeft: 8,

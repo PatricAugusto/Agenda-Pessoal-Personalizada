@@ -13,6 +13,7 @@ import { Alert, Platform, Pressable, ScrollView, Text, View } from 'react-native
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomNavigation } from './BottomNavigation';
 import Svg, { Path } from 'react-native-svg';
+import { GlassCanvas, GlassSurface } from './GlassSurface';
 import { formatDateKey, type Appointment } from '../lib/appointments';
 import { useAppointments } from '../providers/AppointmentsProvider';
 import { usePomodoro } from '../providers/PomodoroProvider';
@@ -105,7 +106,7 @@ function MonthCalendar({
   );
 
   return (
-    <View style={styles.calendarCard}>
+    <GlassSurface style={styles.calendarCard}>
       <View style={styles.weekdayRow}>
         {weekdayLabels.map((label) => (
           <View key={label} style={styles.weekdayCell}>
@@ -177,7 +178,7 @@ function MonthCalendar({
           })}
         </View>
       ))}
-    </View>
+    </GlassSurface>
   );
 }
 
@@ -196,7 +197,7 @@ function WeekCalendar({
   const dates = Array.from({ length: 7 }, (_, index) => addDays(firstDay, index));
 
   return (
-    <View style={styles.weekCard}>
+    <GlassSurface style={styles.weekCard}>
       {dates.map((date) => {
         const dateKey = formatDateKey(date);
         const isSelected = dateKey === formatDateKey(selectedDate);
@@ -263,7 +264,7 @@ function WeekCalendar({
           </Pressable>
         );
       })}
-    </View>
+    </GlassSurface>
   );
 }
 
@@ -346,7 +347,7 @@ function SelectedDayAgenda({
       </View>
 
       {loadError ? (
-        <View style={styles.messageCard}>
+        <GlassSurface style={styles.messageCard}>
           <Text style={styles.errorText}>{loadError}</Text>
           <Pressable
             accessibilityRole="button"
@@ -355,15 +356,15 @@ function SelectedDayAgenda({
           >
             <Text style={styles.retryButtonText}>Tentar novamente</Text>
           </Pressable>
-        </View>
+        </GlassSurface>
       ) : isLoading ? (
-        <View style={styles.messageCard}>
+        <GlassSurface style={styles.messageCard}>
           <Text style={styles.emptyDescription}>Carregando compromissos...</Text>
-        </View>
+        </GlassSurface>
       ) : dayAppointments.length > 0 ? (
         <View style={styles.appointmentList}>
           {dayAppointments.map((appointment) => (
-            <View key={appointment.id} style={styles.appointmentCard}>
+            <GlassSurface key={appointment.id} style={styles.appointmentCard}>
               <View style={styles.appointmentTime}>
                 <Clock3 color={colors.green} size={14} />
                 <Text style={styles.appointmentTimeText}>
@@ -410,11 +411,11 @@ function SelectedDayAgenda({
                   strokeWidth={2}
                 />
               </Pressable>
-            </View>
+            </GlassSurface>
           ))}
         </View>
       ) : (
-        <View style={styles.emptyCard}>
+        <GlassSurface style={styles.emptyCard}>
           <View style={styles.emptyIcon}>
             <CalendarDays color={colors.greenMuted} size={21} strokeWidth={1.7} />
           </View>
@@ -424,7 +425,7 @@ function SelectedDayAgenda({
           <Text style={styles.emptyDescription}>
             Seus compromissos aparecerão aqui.
           </Text>
-        </View>
+        </GlassSurface>
       )}
     </>
   );
@@ -465,8 +466,9 @@ export function CalendarScreen() {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
+    <GlassCanvas>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View style={styles.brand}>
             <View style={styles.brandIcon}>
@@ -602,7 +604,7 @@ export function CalendarScreen() {
           </View>
         ) : null}
         {mode === 'day' ? (
-          <View style={styles.dayFocusCard}>
+          <GlassSurface style={styles.dayFocusCard}>
             <View style={styles.dayNumberCard}>
               <Text style={styles.dayNumber}>
                 {new Intl.DateTimeFormat('pt-BR', { day: '2-digit' }).format(selectedDate)}
@@ -624,7 +626,7 @@ export function CalendarScreen() {
                 <Text style={styles.todayTagText}>HOJE</Text>
               </View>
             ) : null}
-          </View>
+          </GlassSurface>
         ) : null}
 
         <Pressable
@@ -661,8 +663,9 @@ export function CalendarScreen() {
           <View style={styles.footerLine} />
           <Text style={styles.footerVersion}>v1.1.0</Text>
         </View>
-      </ScrollView>
-      <BottomNavigation activeTab="calendar" />
-    </SafeAreaView>
+        </ScrollView>
+        <BottomNavigation activeTab="calendar" />
+      </SafeAreaView>
+    </GlassCanvas>
   );
 }

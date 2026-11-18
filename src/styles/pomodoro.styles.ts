@@ -4,7 +4,7 @@ import { colors } from '../theme/colors';
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   content: {
     flexGrow: 1,
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 24,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.surface,
   },
   phaseLabel: {
@@ -105,7 +105,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 18,
     borderRadius: 13,
-    backgroundColor: colors.green,
+    borderWidth: 1,
+    borderColor: 'rgba(225, 255, 235, 0.5)',
+    backgroundColor: 'rgba(114, 241, 162, 0.88)',
+    shadowColor: colors.green,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+    elevation: 3,
   },
   primaryButtonText: {
     marginLeft: 8,
@@ -129,7 +136,7 @@ export const styles = StyleSheet.create({
     padding: 18,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.surface,
   },
   cycleEyebrow: {
