@@ -6,11 +6,11 @@ import {
   ChevronRight,
   Clock3,
   Plus,
-  Terminal,
   Trash2,
 } from 'lucide-react-native';
 import { Alert, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Svg, { Path } from 'react-native-svg';
 import { formatDateKey, type Appointment } from '../lib/appointments';
 import { useAppointments } from '../providers/AppointmentsProvider';
 import { styles } from '../styles/calendar.styles';
@@ -451,7 +451,30 @@ export function CalendarScreen() {
         <View style={styles.header}>
           <View style={styles.brand}>
             <View style={styles.brandIcon}>
-              <Terminal color={colors.green} size={19} strokeWidth={2} />
+              <Svg width={25} height={25} viewBox="0 0 64 64">
+                <Path
+                  d="M32 7 C46 7 57 18 57 32 C57 42 51 51 42 55 C37 57 33 53 36 49 C38 46 43 45 46 40 C50 33 47 23 40 17 C35 13 29 12 23 14"
+                  fill="none"
+                  stroke={colors.green}
+                  strokeWidth={6}
+                  strokeLinecap="round"
+                />
+                <Path
+                  d="M22 15 C12 20 7 29 9 40 C11 50 19 56 28 57"
+                  fill="none"
+                  stroke={colors.green}
+                  strokeWidth={5}
+                  strokeLinecap="round"
+                  opacity={0.72}
+                />
+                <Path
+                  d="M29 57 C34 58 39 56 42 53"
+                  fill="none"
+                  stroke={colors.green}
+                  strokeWidth={3}
+                  strokeLinecap="round"
+                />
+              </Svg>
             </View>
             <View>
               <Text style={styles.brandName}>MIRAI</Text>

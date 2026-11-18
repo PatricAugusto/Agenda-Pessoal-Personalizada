@@ -1,5 +1,7 @@
 # Agenda Pessoal
 
+Visual: MIRAI / Personal Evolution, com logo Ensō verde sobre fundo escuro.
+
 Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A interface usa uma paleta escura com acentos verdes e ícones Lucide.
 
 ## Calendário
