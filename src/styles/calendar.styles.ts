@@ -481,7 +481,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 72,
+    minWidth: 92,
     minHeight: 34,
   },
   appointmentTimeText: {

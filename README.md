@@ -8,6 +8,7 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - Navegue pelos períodos com as setas ou volte à data atual com **Hoje**.
 - Toque em um dia para selecioná-lo; a agenda abaixo acompanha a seleção.
 - Cadastre compromissos com título, data, horário e observações opcionais.
+- Informe o horário inicial e final; o intervalo aparece junto ao compromisso na agenda.
 - Os compromissos ficam salvos localmente em SQLite e são indicados por pontos no calendário.
 
 ## Estrutura

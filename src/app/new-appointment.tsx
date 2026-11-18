@@ -21,7 +21,7 @@ import { useAppointments } from '../providers/AppointmentsProvider';
 import { styles } from '../styles/newAppointment.styles';
 import { colors } from '../theme/colors';
 
-type PickerMode = 'date' | 'time';
+type PickerMode = 'date' | 'startTime' | 'endTime';
 
 function atMidnight(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -61,15 +61,25 @@ export default function NewAppointmentScreen() {
   const [selectedDate, setSelectedDate] = useState(() =>
     atMidnight(initialDate ?? new Date()),
   );
-  const [selectedTime, setSelectedTime] = useState(() => {
+  const [selectedStartTime, setSelectedStartTime] = useState(() => {
     const time = new Date();
     time.setHours(9, 0, 0, 0);
+    return time;
+  });
+  const [selectedEndTime, setSelectedEndTime] = useState(() => {
+    const time = new Date();
+    time.setHours(10, 0, 0, 0);
     return time;
   });
   const [dateInput, setDateInput] = useState(() =>
     dateInputValue(atMidnight(initialDate ?? new Date())),
   );
-  const [timeInput, setTimeInput] = useState(() => timeInputValue(selectedTime));
+  const [startTimeInput, setStartTimeInput] = useState(() =>
+    timeInputValue(selectedStartTime),
+  );
+  const [endTimeInput, setEndTimeInput] = useState(() =>
+    timeInputValue(selectedEndTime),
+  );
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
   const [pickerMode, setPickerMode] = useState<PickerMode | null>(null);
@@ -83,23 +93,35 @@ export default function NewAppointmentScreen() {
     setDateInput(dateInputValue(nextDate));
   }
 
-  function updateTime(value: Date) {
-    setSelectedTime(value);
-    setTimeInput(timeInputValue(value));
+  function updateStartTime(value: Date) {
+    setSelectedStartTime(value);
+    setStartTimeInput(timeInputValue(value));
+  }
+
+  function updateEndTime(value: Date) {
+    setSelectedEndTime(value);
+    setEndTimeInput(timeInputValue(value));
   }
 
   function openPicker(mode: PickerMode) {
     if (Platform.OS === 'android') {
       DateTimePickerAndroid.open({
-        value: mode === 'date' ? selectedDate : selectedTime,
-        mode,
+        value:
+          mode === 'date'
+            ? selectedDate
+            : mode === 'startTime'
+              ? selectedStartTime
+              : selectedEndTime,
+        mode: mode === 'date' ? 'date' : 'time',
         is24Hour: true,
         display: mode === 'date' ? 'calendar' : 'clock',
         onValueChange: (_event, nextValue) => {
           if (mode === 'date') {
             updateDate(nextValue);
+          } else if (mode === 'startTime') {
+            updateStartTime(nextValue);
           } else {
-            updateTime(nextValue);
+            updateEndTime(nextValue);
           }
         },
       });
@@ -119,8 +141,10 @@ export default function NewAppointmentScreen() {
 
     if (pickerMode === 'date') {
       updateDate(nextValue);
+    } else if (pickerMode === 'startTime') {
+      updateStartTime(nextValue);
     } else {
-      updateTime(nextValue);
+      updateEndTime(nextValue);
     }
   }
 
@@ -129,7 +153,13 @@ export default function NewAppointmentScreen() {
     const appointmentDate =
       Platform.OS === 'web' ? parseDateInput(dateInput) : selectedDate;
     const appointmentTime =
-      Platform.OS === 'web' ? parseTimeInput(timeInput) : timeInputValue(selectedTime);
+      Platform.OS === 'web'
+        ? parseTimeInput(startTimeInput)
+        : timeInputValue(selectedStartTime);
+    const appointmentEndTime =
+      Platform.OS === 'web'
+        ? parseTimeInput(endTimeInput)
+        : timeInputValue(selectedEndTime);
 
     if (!cleanTitle) {
       setFormError('Informe um título para o compromisso.');
@@ -140,7 +170,15 @@ export default function NewAppointmentScreen() {
       return;
     }
     if (!appointmentTime) {
-      setFormError('Use um horário válido no formato HH:MM.');
+      setFormError('Use um horário inicial válido no formato HH:MM.');
+      return;
+    }
+    if (!appointmentEndTime) {
+      setFormError('Use um horário final válido no formato HH:MM.');
+      return;
+    }
+    if (appointmentEndTime <= appointmentTime) {
+      setFormError('O horário final deve ser posterior ao inicial.');
       return;
     }
 
@@ -151,6 +189,7 @@ export default function NewAppointmentScreen() {
         title: cleanTitle,
         date: formatDateKey(appointmentDate),
         time: appointmentTime,
+        endTime: appointmentEndTime,
         notes: notes.trim() || null,
       });
       router.back();
@@ -242,31 +281,31 @@ export default function NewAppointmentScreen() {
                 )}
               </View>
 
-              <View style={[styles.fieldGroup, styles.halfField]}>
-                <Text style={styles.fieldLabel}>HORÁRIO</Text>
+              <View style={[styles.fieldGroup, styles.halfField, styles.rightField]}>
+                <Text style={styles.fieldLabel}>HORÁRIO INICIAL</Text>
                 {Platform.OS === 'web' ? (
                   <TextInput
-                    accessibilityLabel="Horário do compromisso"
+                    accessibilityLabel="Horário inicial do compromisso"
                     keyboardType="numbers-and-punctuation"
                     maxLength={5}
                     onChangeText={(value) => {
-                      setTimeInput(value);
+                      setStartTimeInput(value);
                       if (parseTimeInput(value)) {
                         const [hours, minutes] = value.split(':').map(Number);
-                        const nextTime = new Date(selectedTime);
+                        const nextTime = new Date(selectedStartTime);
                         nextTime.setHours(hours, minutes, 0, 0);
-                        setSelectedTime(nextTime);
+                        setSelectedStartTime(nextTime);
                       }
                     }}
                     placeholder="HH:MM"
                     placeholderTextColor={colors.textMuted}
                     style={styles.textInput}
-                    value={timeInput}
+                    value={startTimeInput}
                   />
                 ) : (
                   <Pressable
                     accessibilityRole="button"
-                    onPress={() => openPicker('time')}
+                    onPress={() => openPicker('startTime')}
                     style={({ pressed }) => [
                       styles.pickerField,
                       pressed && styles.pressed,
@@ -274,12 +313,53 @@ export default function NewAppointmentScreen() {
                   >
                     <Clock3 color={colors.green} size={17} />
                     <Text style={styles.pickerFieldText}>
-                      {timeInputValue(selectedTime)}
+                      {timeInputValue(selectedStartTime)}
                     </Text>
                     <ChevronRight color={colors.textMuted} size={16} />
                   </Pressable>
                 )}
               </View>
+            </View>
+
+            <View style={styles.fieldDivider} />
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>HORÁRIO FINAL</Text>
+              {Platform.OS === 'web' ? (
+                <TextInput
+                  accessibilityLabel="Horário final do compromisso"
+                  keyboardType="numbers-and-punctuation"
+                  maxLength={5}
+                  onChangeText={(value) => {
+                    setEndTimeInput(value);
+                    if (parseTimeInput(value)) {
+                      const [hours, minutes] = value.split(':').map(Number);
+                      const nextTime = new Date(selectedEndTime);
+                      nextTime.setHours(hours, minutes, 0, 0);
+                      setSelectedEndTime(nextTime);
+                    }
+                  }}
+                  placeholder="HH:MM"
+                  placeholderTextColor={colors.textMuted}
+                  style={styles.textInput}
+                  value={endTimeInput}
+                />
+              ) : (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => openPicker('endTime')}
+                  style={({ pressed }) => [
+                    styles.pickerField,
+                    pressed && styles.pressed,
+                  ]}
+                >
+                  <Clock3 color={colors.green} size={17} />
+                  <Text style={styles.pickerFieldText}>
+                    {timeInputValue(selectedEndTime)}
+                  </Text>
+                  <ChevronRight color={colors.textMuted} size={16} />
+                </Pressable>
+              )}
             </View>
 
             <View style={styles.fieldDivider} />
@@ -305,9 +385,15 @@ export default function NewAppointmentScreen() {
               <DateTimePicker
                 display="spinner"
                 is24Hour
-                mode={pickerMode}
+                mode={pickerMode === 'date' ? 'date' : 'time'}
                 onValueChange={handleNativePickerChange}
-                value={pickerMode === 'date' ? selectedDate : selectedTime}
+                value={
+                  pickerMode === 'date'
+                    ? selectedDate
+                    : pickerMode === 'startTime'
+                      ? selectedStartTime
+                      : selectedEndTime
+                }
               />
               <Pressable
                 accessibilityRole="button"

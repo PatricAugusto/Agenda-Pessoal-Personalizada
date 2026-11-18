@@ -87,6 +87,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  rightField: {
+    marginLeft: 10,
+  },
   pickerField: {
     minHeight: 44,
     flexDirection: 'row',

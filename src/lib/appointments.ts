@@ -5,6 +5,7 @@ export interface Appointment {
   title: string;
   date: string;
   time: string;
+  endTime: string | null;
   notes: string | null;
 }
 
@@ -12,10 +13,11 @@ export interface NewAppointment {
   title: string;
   date: string;
   time: string;
+  endTime: string;
   notes: string | null;
 }
 
-const databaseVersion = 1;
+const databaseVersion = 2;
 
 export function formatDateKey(date: Date) {
   const year = date.getFullYear();
@@ -66,12 +68,20 @@ export async function initializeDatabase(db: SQLiteDatabase) {
         title TEXT NOT NULL,
         date TEXT NOT NULL,
         time TEXT NOT NULL,
+        end_time TEXT,
         notes TEXT
       );
       CREATE INDEX IF NOT EXISTS appointments_date_time_idx
         ON appointments (date, time);
     `);
-    currentVersion = 1;
+    currentVersion = 2;
+  }
+
+  if (currentVersion === 1) {
+    await db.execAsync(`
+      ALTER TABLE appointments ADD COLUMN end_time TEXT;
+    `);
+    currentVersion = 2;
   }
 
   await db.execAsync(`PRAGMA user_version = ${currentVersion}`);
@@ -79,7 +89,7 @@ export async function initializeDatabase(db: SQLiteDatabase) {
 
 export async function getAppointments(db: SQLiteDatabase) {
   return db.getAllAsync<Appointment>(
-    'SELECT id, title, date, time, notes FROM appointments ORDER BY date, time',
+    'SELECT id, title, date, time, end_time AS endTime, notes FROM appointments ORDER BY date, time',
   );
 }
 
@@ -93,12 +103,13 @@ export async function insertAppointment(
   };
 
   await db.runAsync(
-    `INSERT INTO appointments (id, title, date, time, notes)
-     VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO appointments (id, title, date, time, end_time, notes)
+     VALUES (?, ?, ?, ?, ?, ?)`,
     appointment.id,
     appointment.title,
     appointment.date,
     appointment.time,
+    appointment.endTime,
     appointment.notes,
   );
 

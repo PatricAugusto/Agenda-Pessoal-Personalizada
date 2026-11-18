@@ -362,7 +362,11 @@ function SelectedDayAgenda({
             <View key={appointment.id} style={styles.appointmentCard}>
               <View style={styles.appointmentTime}>
                 <Clock3 color={colors.green} size={14} />
-                <Text style={styles.appointmentTimeText}>{appointment.time}</Text>
+                <Text style={styles.appointmentTimeText}>
+                  {appointment.endTime
+                    ? `${appointment.time}–${appointment.endTime}`
+                    : appointment.time}
+                </Text>
               </View>
               <View style={styles.appointmentDetails}>
                 <Text style={styles.appointmentTitle}>{appointment.title}</Text>
