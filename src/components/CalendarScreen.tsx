@@ -6,13 +6,16 @@ import {
   ChevronRight,
   Clock3,
   Plus,
+  Timer,
   Trash2,
 } from 'lucide-react-native';
 import { Alert, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BottomNavigation } from './BottomNavigation';
 import Svg, { Path } from 'react-native-svg';
 import { formatDateKey, type Appointment } from '../lib/appointments';
 import { useAppointments } from '../providers/AppointmentsProvider';
+import { usePomodoro } from '../providers/PomodoroProvider';
 import { styles } from '../styles/calendar.styles';
 import { colors } from '../theme/colors';
 
@@ -278,6 +281,7 @@ function SelectedDayAgenda({
   onRetry: () => void;
 }) {
   const { deleteAppointment } = useAppointments();
+  const { startFocus } = usePomodoro();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const isToday = formatDateKey(date) === formatDateKey(atMidnight(new Date()));
   const selectedDayLabel = new Intl.DateTimeFormat('pt-BR', {
@@ -374,6 +378,21 @@ function SelectedDayAgenda({
                   <Text style={styles.appointmentNotes}>{appointment.notes}</Text>
                 ) : null}
               </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`Iniciar foco para ${appointment.title}`}
+                onPress={() => {
+                  startFocus({ id: appointment.id, title: appointment.title });
+                  router.navigate('/pomodoro');
+                }}
+                style={({ pressed }) => [
+                  styles.focusAppointmentButton,
+                  pressed && styles.pressed,
+                ]}
+              >
+                <Timer color={colors.green} size={17} />
+                <Text style={styles.focusAppointmentButtonText}>Foco</Text>
+              </Pressable>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={`Apagar ${appointment.title}`}
@@ -643,6 +662,7 @@ export function CalendarScreen() {
           <Text style={styles.footerVersion}>v1.1.0</Text>
         </View>
       </ScrollView>
+      <BottomNavigation activeTab="calendar" />
     </SafeAreaView>
   );
 }

@@ -12,6 +12,7 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - Cadastre compromissos com título, data, horário e observações opcionais.
 - Informe o horário inicial e final; o intervalo aparece junto ao compromisso na agenda.
 - Os compromissos ficam salvos localmente em SQLite e são indicados por pontos no calendário.
+- O Pomodoro oferece sessões de foco de 25 minutos e pausas de 5 minutos. Use o ícone de timer em um compromisso para iniciar o foco vinculado a ele.
 
 ## Estrutura
 
