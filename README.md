@@ -31,6 +31,28 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 
 Se a rede local bloquear a conexão, inicie com `npx expo start --tunnel`.
 
+## Gerar APK Android
+
+O perfil `preview` do EAS gera um APK instalável diretamente no aparelho. O identificador Android configurado é `com.agendapessoal.personalizada`; mantenha-o estável para que futuras atualizações sejam reconhecidas como o mesmo aplicativo.
+
+1. Abra o PowerShell na pasta do projeto e entre na sua conta Expo (crie uma conta gratuita em [expo.dev](https://expo.dev/signup), se necessário):
+
+   ```powershell
+   npx eas-cli@latest login
+   ```
+
+2. Gere o APK:
+
+   ```powershell
+   npx eas-cli@latest build --platform android --profile preview
+   ```
+
+3. Na primeira execução, aceite criar ou associar o projeto EAS e deixe o Expo gerar e gerenciar a chave de assinatura Android.
+4. Ao concluir, abra o link do build exibido no terminal ou no painel EAS e baixe o APK.
+5. Transfira o arquivo para o Android e abra-o para instalar. Se solicitado, permita a instalação de aplicativos dessa origem nas configurações do aparelho.
+
+Esse APK é para instalação direta e testes pessoais; não é o pacote AAB destinado à Play Store. Não é necessária uma conta Google Play para gerar ou instalar o APK.
+
 ## Comandos
 
 - `npm start` — inicia o servidor Expo.

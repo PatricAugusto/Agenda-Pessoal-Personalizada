@@ -470,7 +470,7 @@ export const styles = StyleSheet.create({
   },
   appointmentCard: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     padding: 15,
     borderRadius: 14,
     borderWidth: 1,
@@ -480,8 +480,9 @@ export const styles = StyleSheet.create({
   appointmentTime: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     minWidth: 72,
-    paddingTop: 1,
+    minHeight: 34,
   },
   appointmentTimeText: {
     marginLeft: 6,
@@ -504,6 +505,20 @@ export const styles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: 12,
     lineHeight: 17,
+  },
+  deleteAppointmentButton: {
+    width: 38,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceRaised,
+  },
+  disabledDeleteButton: {
+    opacity: 0.5,
   },
   pressed: {
     opacity: 0.76,

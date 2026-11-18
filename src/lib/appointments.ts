@@ -104,3 +104,7 @@ export async function insertAppointment(
 
   return appointment;
 }
+
+export async function deleteAppointment(db: SQLiteDatabase, appointmentId: string) {
+  await db.runAsync('DELETE FROM appointments WHERE id = ?', appointmentId);
+}

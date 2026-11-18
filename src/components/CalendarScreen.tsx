@@ -7,8 +7,9 @@ import {
   Clock3,
   Plus,
   Terminal,
+  Trash2,
 } from 'lucide-react-native';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { formatDateKey, type Appointment } from '../lib/appointments';
 import { useAppointments } from '../providers/AppointmentsProvider';
@@ -276,6 +277,8 @@ function SelectedDayAgenda({
   loadError: string | null;
   onRetry: () => void;
 }) {
+  const { deleteAppointment } = useAppointments();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const isToday = formatDateKey(date) === formatDateKey(atMidnight(new Date()));
   const selectedDayLabel = new Intl.DateTimeFormat('pt-BR', {
     weekday: 'long',
@@ -285,6 +288,44 @@ function SelectedDayAgenda({
   const dayAppointments = appointments.filter(
     (appointment) => appointment.date === formatDateKey(date),
   );
+
+  async function removeAppointment(appointment: Appointment) {
+    setDeletingId(appointment.id);
+    try {
+      await deleteAppointment(appointment.id);
+    } catch (error) {
+      console.error('Não foi possível apagar o compromisso.', error);
+      if (Platform.OS === 'web') {
+        globalThis.alert('Não foi possível apagar o compromisso. Tente novamente.');
+      } else {
+        Alert.alert('Erro', 'Não foi possível apagar o compromisso.');
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  function confirmAppointmentRemoval(appointment: Appointment) {
+    if (Platform.OS === 'web') {
+      if (globalThis.confirm(`Apagar "${appointment.title}"?`)) {
+        void removeAppointment(appointment);
+      }
+      return;
+    }
+
+    Alert.alert(
+      'Apagar compromisso',
+      `Deseja apagar "${appointment.title}"?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Apagar',
+          style: 'destructive',
+          onPress: () => void removeAppointment(appointment),
+        },
+      ],
+    );
+  }
 
   return (
     <>
@@ -329,6 +370,23 @@ function SelectedDayAgenda({
                   <Text style={styles.appointmentNotes}>{appointment.notes}</Text>
                 ) : null}
               </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`Apagar ${appointment.title}`}
+                disabled={deletingId === appointment.id}
+                onPress={() => confirmAppointmentRemoval(appointment)}
+                style={({ pressed }) => [
+                  styles.deleteAppointmentButton,
+                  deletingId === appointment.id && styles.disabledDeleteButton,
+                  pressed && styles.pressed,
+                ]}
+              >
+                <Trash2
+                  color={colors.error}
+                  size={16}
+                  strokeWidth={2}
+                />
+              </Pressable>
             </View>
           ))}
         </View>

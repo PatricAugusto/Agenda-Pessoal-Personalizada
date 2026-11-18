@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
+  deleteAppointment,
   getAppointments,
   insertAppointment,
   type Appointment,
@@ -19,6 +20,7 @@ interface AppointmentsContextValue {
   isLoading: boolean;
   loadError: string | null;
   addAppointment: (input: NewAppointment) => Promise<void>;
+  deleteAppointment: (appointmentId: string) => Promise<void>;
   reloadAppointments: () => void;
 }
 
@@ -76,6 +78,16 @@ export function AppointmentsProvider({ children }: PropsWithChildren) {
     [db, isLoading],
   );
 
+  const removeAppointment = useCallback(
+    async (appointmentId: string) => {
+      await deleteAppointment(db, appointmentId);
+      setAppointments((current) =>
+        current.filter((appointment) => appointment.id !== appointmentId),
+      );
+    },
+    [db],
+  );
+
   const reloadAppointments = useCallback(() => {
     setIsLoading(true);
     setLoadError(null);
@@ -89,6 +101,7 @@ export function AppointmentsProvider({ children }: PropsWithChildren) {
         isLoading,
         loadError,
         addAppointment,
+        deleteAppointment: removeAppointment,
         reloadAppointments,
       }}
     >

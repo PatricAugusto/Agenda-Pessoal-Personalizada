@@ -11,6 +11,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.agendapessoal.personalizada",
+      "versionCode": 1,
       "backgroundColor": "#080D0A",
       "adaptiveIcon": {
         "backgroundColor": "#080D0A",
@@ -30,6 +32,16 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "2b4e86c2-3c6f-4d6c-95f4-60e071e311ee"
+      }
     }
   }
 }
