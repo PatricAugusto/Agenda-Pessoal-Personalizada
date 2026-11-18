@@ -116,58 +116,83 @@ export function SelectedDayAgenda({
         <View style={styles.appointmentList}>
           {dayAppointments.map((appointment) => (
             <GlassSurface key={appointment.id} style={styles.appointmentCard}>
-              <View style={styles.appointmentTime}>
-                <Clock3 color={colors.green} size={14} />
-                <View style={styles.appointmentTimeRange}>
-                  <Text style={styles.appointmentTimeText}>
-                    {appointment.time}
+              <View style={styles.appointmentCardTop}>
+                <View style={styles.appointmentDetails}>
+                  <Text numberOfLines={2} style={styles.appointmentTitle}>
+                    {appointment.title}
                   </Text>
+                  {appointment.notes ? (
+                    <Text numberOfLines={2} style={styles.appointmentNotes}>
+                      {appointment.notes}
+                    </Text>
+                  ) : null}
+                </View>
+                <View style={styles.appointmentActions}>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={`Iniciar foco para ${appointment.title}`}
+                    onPress={() => {
+                      startFocus({
+                        id: appointment.id,
+                        title: appointment.title,
+                      });
+                      router.navigate('/pomodoro');
+                    }}
+                    style={({ pressed }) => [
+                      styles.focusAppointmentButton,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Timer color={colors.green} size={17} />
+                    <Text style={styles.focusAppointmentButtonText}>Foco</Text>
+                  </Pressable>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={`Apagar ${appointment.title}`}
+                    disabled={deletingId === appointment.id}
+                    onPress={() => confirmAppointmentRemoval(appointment)}
+                    style={({ pressed }) => [
+                      styles.deleteAppointmentButton,
+                      deletingId === appointment.id &&
+                        styles.disabledDeleteButton,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Trash2 color={colors.error} size={16} strokeWidth={2} />
+                  </Pressable>
+                </View>
+              </View>
+              <View style={styles.appointmentTimePanel}>
+                <View style={styles.appointmentTimeHeading}>
+                  <Clock3 color={colors.green} size={14} />
+                  <Text style={styles.appointmentTimeHeadingText}>HORÁRIO</Text>
+                </View>
+                <View style={styles.appointmentTimeRange}>
+                  <View
+                    style={[
+                      styles.appointmentTimeValue,
+                      !appointment.endTime &&
+                        styles.singleAppointmentTimeValue,
+                    ]}
+                  >
+                    <Text style={styles.appointmentTimeValueLabel}>INÍCIO</Text>
+                    <Text style={styles.appointmentTimeText}>
+                      {appointment.time}
+                    </Text>
+                  </View>
                   {appointment.endTime ? (
                     <>
                       <Text style={styles.appointmentTimeSeparator}>–</Text>
-                      <Text style={styles.appointmentTimeText}>
-                        {appointment.endTime}
-                      </Text>
+                      <View style={styles.appointmentTimeValue}>
+                        <Text style={styles.appointmentTimeValueLabel}>FIM</Text>
+                        <Text style={styles.appointmentTimeText}>
+                          {appointment.endTime}
+                        </Text>
+                      </View>
                     </>
                   ) : null}
                 </View>
               </View>
-              <View style={styles.appointmentDetails}>
-                <Text style={styles.appointmentTitle}>{appointment.title}</Text>
-                {appointment.notes ? (
-                  <Text style={styles.appointmentNotes}>
-                    {appointment.notes}
-                  </Text>
-                ) : null}
-              </View>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={`Iniciar foco para ${appointment.title}`}
-                onPress={() => {
-                  startFocus({ id: appointment.id, title: appointment.title });
-                  router.navigate('/pomodoro');
-                }}
-                style={({ pressed }) => [
-                  styles.focusAppointmentButton,
-                  pressed && styles.pressed,
-                ]}
-              >
-                <Timer color={colors.green} size={17} />
-                <Text style={styles.focusAppointmentButtonText}>Foco</Text>
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={`Apagar ${appointment.title}`}
-                disabled={deletingId === appointment.id}
-                onPress={() => confirmAppointmentRemoval(appointment)}
-                style={({ pressed }) => [
-                  styles.deleteAppointmentButton,
-                  deletingId === appointment.id && styles.disabledDeleteButton,
-                  pressed && styles.pressed,
-                ]}
-              >
-                <Trash2 color={colors.error} size={16} strokeWidth={2} />
-              </Pressable>
             </GlassSurface>
           ))}
         </View>
