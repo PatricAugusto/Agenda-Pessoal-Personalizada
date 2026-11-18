@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { router } from 'expo-router';
+import Constants from 'expo-constants';
 import {
   ChevronLeft,
   ChevronRight,
@@ -250,7 +251,11 @@ export function CalendarScreen() {
             <Clock3 color={colors.textMuted} size={14} />
             <Text style={styles.footerText}>UM DIA DE CADA VEZ</Text>
             <View style={styles.footerLine} />
-            <Text style={styles.footerVersion}>v1.1.0</Text>
+            {Constants.expoConfig?.version ? (
+              <Text style={styles.footerVersion}>
+                v{Constants.expoConfig.version}
+              </Text>
+            ) : null}
           </View>
         </ScrollView>
         <BottomNavigation activeTab="calendar" />

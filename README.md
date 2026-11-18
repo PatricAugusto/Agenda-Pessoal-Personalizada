@@ -47,13 +47,15 @@ Se a rede local bloquear a conexão, inicie com `npx expo start --tunnel`.
 
 ## Gerar APK Android
 
-O perfil `preview` do EAS gera um APK instalável diretamente no aparelho. O identificador Android configurado é `com.agendapessoal.personalizada`; mantenha-o estável para que futuras atualizações sejam reconhecidas como o mesmo aplicativo.
+O perfil `preview` do EAS gera um APK instalável diretamente no aparelho. Esta versão é a **1.1.1** (`versionCode` Android **3**). O projeto já está vinculado ao EAS e o identificador Android é `com.agendapessoal.personalizada`; mantenha ambos estáveis para que futuras atualizações sejam reconhecidas como o mesmo aplicativo.
 
-1. Abra o PowerShell na pasta do projeto e entre na sua conta Expo (crie uma conta gratuita em [expo.dev](https://expo.dev/signup), se necessário):
+1. Abra o PowerShell na pasta do projeto e confirme que está conectado à sua conta Expo:
 
    ```powershell
-   npx eas-cli@latest login
+   npx eas-cli@latest whoami
    ```
+
+   Se não estiver conectado, crie uma conta gratuita em [expo.dev](https://expo.dev/signup) e execute `npx eas-cli@latest login`.
 
 2. Gere o APK:
 
@@ -61,7 +63,7 @@ O perfil `preview` do EAS gera um APK instalável diretamente no aparelho. O ide
    npx eas-cli@latest build --platform android --profile preview
    ```
 
-3. Na primeira execução, aceite criar ou associar o projeto EAS e deixe o Expo gerar e gerenciar a chave de assinatura Android.
+3. Se solicitado, permita que o EAS gere e gerencie a chave de assinatura Android.
 4. Ao concluir, abra o link do build exibido no terminal ou no painel EAS e baixe o APK.
 5. Transfira o arquivo para o Android e abra-o para instalar. Se solicitado, permita a instalação de aplicativos dessa origem nas configurações do aparelho.
 

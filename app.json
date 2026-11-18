@@ -2,7 +2,7 @@
   "expo": {
     "name": "Agenda Pessoal",
     "slug": "agenda-pessoal",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "com.agendapessoal.personalizada",
-      "versionCode": 2,
+      "versionCode": 3,
       "backgroundColor": "#080D0A",
       "adaptiveIcon": {
         "backgroundColor": "#080D0A",
