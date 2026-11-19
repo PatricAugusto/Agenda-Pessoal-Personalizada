@@ -38,8 +38,11 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - `npm test` — executa os testes uma vez.
 - `npm run test:watch` — reexecuta os testes durante o desenvolvimento.
 - `npm run test:coverage` — gera o relatório de cobertura em `coverage/`.
+- `npm run test:ci` — executa as suites em modo CI e aplica os limites de cobertura.
+- `npm run typecheck` — verifica os tipos TypeScript.
+- `npm run security:audit` — falha se a auditoria encontrar vulnerabilidades moderadas ou mais graves.
 
-Os testes usam Jest com `jest-expo` e React Native Testing Library. Eles ajudam a detectar regressões em componentes e regras de negócio; não substituem análise de vulnerabilidades de dependências, testes de segurança dedicados nem validação manual nos aparelhos.
+Os testes usam Jest com `jest-expo` e React Native Testing Library para verificar telas, componentes, calendário, formatadores e regras de produtividade. O workflow `.github/workflows/ci.yml` executa auditoria, lint, tipos, testes com cobertura e exportação Android em pushes e pull requests; o relatório de cobertura fica disponível como artefato da execução. Esses testes ajudam a detectar regressões, mas não substituem análise de vulnerabilidades, testes de segurança dedicados nem validação manual nos aparelhos.
 
 Use `npm audit` para verificar todas as dependências e `npm audit --omit=dev` para verificar apenas as de produção. Os overrides em `package.json` mantêm `minimatch` e `glob` em versões corrigidas enquanto os pacotes Expo/Jest atualizam os intervalos declarados; reavalie-os após atualizações desses pacotes.
 
