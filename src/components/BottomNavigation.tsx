@@ -12,6 +12,7 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
     <GlassSurface style={styles.container} intensity={55}>
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel="Calendário"
         accessibilityState={{ selected: activeTab === 'calendar' }}
         onPress={() => router.navigate('/calendar')}
         style={({ pressed }) => [
@@ -36,6 +37,7 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
 
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel="Pomodoro"
         accessibilityState={{ selected: activeTab === 'pomodoro' }}
         onPress={() => router.navigate('/pomodoro')}
         style={({ pressed }) => [
@@ -60,6 +62,7 @@ export function BottomNavigation({ activeTab }: { activeTab: AppTab }) {
 
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel="Visão geral"
         accessibilityState={{ selected: activeTab === 'home' }}
         onPress={() => router.navigate('/')}
         style={({ pressed }) => [

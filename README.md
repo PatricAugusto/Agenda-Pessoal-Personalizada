@@ -31,6 +31,15 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 - `src/styles/` — estilos isolados por tela.
 - `src/theme/` — tokens visuais compartilhados.
 - `src/providers/` e `src/lib/` — estado e acesso aos dados.
+- `src/**/__tests__/` — testes unitários de componentes e regras de negócio.
+
+## Testes
+
+- `npm test` — executa os testes uma vez.
+- `npm run test:watch` — reexecuta os testes durante o desenvolvimento.
+- `npm run test:coverage` — gera o relatório de cobertura em `coverage/`.
+
+Os testes usam Jest com `jest-expo` e React Native Testing Library. Eles ajudam a detectar regressões em componentes e regras de negócio; não substituem análise de vulnerabilidades de dependências, testes de segurança dedicados nem validação manual nos aparelhos.
 
 ## Requisitos
 
