@@ -41,6 +41,8 @@ Aplicativo mobile pessoal em React Native com Expo, TypeScript e Expo Router. A 
 
 Os testes usam Jest com `jest-expo` e React Native Testing Library. Eles ajudam a detectar regressões em componentes e regras de negócio; não substituem análise de vulnerabilidades de dependências, testes de segurança dedicados nem validação manual nos aparelhos.
 
+Use `npm audit` para verificar todas as dependências e `npm audit --omit=dev` para verificar apenas as de produção. Os overrides em `package.json` mantêm `minimatch` e `glob` em versões corrigidas enquanto os pacotes Expo/Jest atualizam os intervalos declarados; reavalie-os após atualizações desses pacotes.
+
 ## Requisitos
 
 - Node.js LTS
